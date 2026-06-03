@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>17 · Lenis Smooth Scroll + GSAP</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .stack { max-width: 1000px; }
+  .stack h2 { font-size: clamp(2rem,6vw,5rem); }
+  .reveal { opacity: 0; }
+</style>
+</head>
+<body>
+<div class="label">17 · <b>Lenis + ScrollTrigger</b> — 부드러운 관성 스크롤 (ScrollSmoother 무료 대안)</div>
+<a class="back" href="../index.html">← INDEX</a>
+
+<section class="section"><h2 class="big">관성 스크롤로</h2></section>
+<section class="section"><h2 class="big accent reveal">부드럽게 흐른다</h2></section>
+<section class="section"><h2 class="big reveal">Lenis가 휠 입력을 보간</h2></section>
+<section class="section"><p class="muted reveal stack">Lenis는 무료(MIT). BlueGarage가 쓰는 GSAP ScrollSmoother는 유료 멤버십 전용이라, 무료로 같은 느낌을 내려면 Lenis + ScrollTrigger 조합이 표준입니다.</p></section>
+
+<!-- Lenis (무료) -->
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* 1) Lenis 인스턴스 생성 */
+const lenis = new Lenis({ lerp: 0.1, smoothWheel: true });
+
+/* 2) Lenis가 스크롤할 때마다 ScrollTrigger에게 알림 (동기화의 핵심) */
+lenis.on("scroll", ScrollTrigger.update);
+
+/* 3) Lenis raf를 GSAP 틱에 물려 한 루프로 통합 (별도 requestAnimationFrame 불필요) */
+gsap.ticker.add((time) => lenis.raf(time * 1000));
+gsap.ticker.lagSmoothing(0);
+
+/* 이후 ScrollTrigger 애니메이션은 평소처럼 작성하면 부드러운 스크롤 위에서 동작 */
+gsap.utils.toArray(".reveal").forEach((el) => {
+  gsap.to(el, {
+    opacity: 1, y: 0, duration: 1, ease: "power3.out",
+    scrollTrigger: { trigger: el, start: "top 80%" }
+  });
+});
+gsap.set(".reveal", { y: 40 });
+</script>
+</body>
+</html>

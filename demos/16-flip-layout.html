@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>16 · Flip Layout Transition</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .stage { min-height: 100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; gap: 3vh; }
+  .toggle { border:1px solid var(--accent); color:var(--accent); background:none; padding:12px 22px; border-radius:30px; cursor:pointer; letter-spacing:.1em; }
+  .toggle:hover { background:var(--accent); color:#08263a; }
+  .gallery { display:grid; gap: 12px; }
+  .gallery.grid { grid-template-columns: repeat(3, 120px); }
+  .gallery.row  { grid-template-columns: repeat(6, 90px); }
+  .box { aspect-ratio:1; border-radius:10px; }
+  .box:nth-child(6n+1){background:#1ea7ff} .box:nth-child(6n+2){background:#f25f5c}
+  .box:nth-child(6n+3){background:#ffe066} .box:nth-child(6n+4){background:#9b5de5}
+  .box:nth-child(6n+5){background:#00bbf9} .box:nth-child(6n){background:#00f5d4}
+</style>
+</head>
+<body>
+<div class="label">16 · <b>Flip Plugin</b> — 레이아웃 전환 자동 보간 (grid ↔ row)</div>
+<a class="back" href="../index.html">← INDEX</a>
+
+<div class="stage">
+  <button class="toggle" id="toggle">레이아웃 전환 (Flip)</button>
+  <div class="gallery grid" id="g">
+    <div class="box"></div><div class="box"></div><div class="box"></div>
+    <div class="box"></div><div class="box"></div><div class="box"></div>
+  </div>
+  <p class="muted">Flip은 "전/후 상태"를 측정해 그 사이를 자동으로 애니메이션합니다.</p>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Flip.min.js"></script>
+<script>
+gsap.registerPlugin(Flip);
+
+const g = document.getElementById("g");
+document.getElementById("toggle").addEventListener("click", () => {
+  /* 1) 현재 상태 캡처 → 2) DOM/클래스 변경 → 3) Flip.from으로 그 차이를 보간 */
+  const state = Flip.getState(".box");
+  g.classList.toggle("grid");
+  g.classList.toggle("row");
+  Flip.from(state, {
+    duration: 0.7,
+    ease: "power2.inOut",
+    stagger: 0.04,
+    absolute: true,
+  });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>15 · Horizontal Gallery + per-item</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .h-wrap { overflow: hidden; }
+  .track { display: flex; height: 100vh; align-items: center; padding: 0 10vw; gap: 6vw; width: max-content; }
+  .work { flex-shrink: 0; width: 38vw; }
+  .work .thumb { overflow: hidden; border-radius: 10px; aspect-ratio: 4/3; }
+  .work img { width: 100%; height: 110%; object-fit: cover; display:block; }
+  .work h3 { margin-top: 1rem; font-size: 1.6rem; }
+  .work p { color: var(--muted); font-size: .9rem; }
+</style>
+</head>
+<body>
+<div class="label">15 · <b>Horizontal Gallery</b> — 가로 이동 + 항목별 이미지 시차 (포트폴리오)</div>
+<a class="back" href="../index.html">← INDEX</a>
+
+<section class="section"><h2 class="big muted">스크롤 ↓</h2></section>
+
+<div class="h-wrap">
+  <div class="track" id="track"></div>
+</div>
+
+<section class="section"><p class="muted">트랙은 가로로 움직이고, 그 안에서 각 썸네일은 다시 시차로 흐릅니다 (containerAnimation).</p></section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+const track = document.getElementById("track");
+const WORKS = ["FANS","JYP SHOP","STUDIO","ENGINEERING","ONE MORE THING"];
+WORKS.forEach((name, i) => {
+  track.insertAdjacentHTML("beforeend", `
+    <div class="work">
+      <div class="thumb"><img src="https://picsum.photos/seed/w${i}/800/600" alt=""></div>
+      <h3>${name}</h3><p>0${i+1} / Project</p>
+    </div>`);
+});
+
+/* 1) 트랙 가로 이동 (이 트윈을 containerAnimation으로 재사용) */
+const horiz = gsap.to(track, {
+  x: () => -(track.scrollWidth - innerWidth),
+  ease: "none",
+  scrollTrigger: { trigger: ".h-wrap", pin: true, scrub: 1, end: () => "+=" + track.scrollWidth }
+});
+
+/* 2) 가로 트랙 내부에서 각 이미지에 시차 부여 → containerAnimation 사용이 핵심 */
+gsap.utils.toArray(".work img").forEach((img) => {
+  gsap.fromTo(img, { yPercent: -8 }, {
+    yPercent: 8, ease: "none",
+    scrollTrigger: {
+      trigger: img.closest(".work"),
+      containerAnimation: horiz,    // 가로 스크롤 컨텍스트에서 트리거
+      start: "left right",
+      end: "right left",
+      scrub: true,
+    }
+  });
+});
+</script>
+</body>
+</html>

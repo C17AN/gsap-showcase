@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>11 · Clip-path Image Reveal</title>
+<link rel="stylesheet" href="_shared.css">
+<style>
+  .figure { width: min(80vw, 900px); aspect-ratio: 16/10; overflow: hidden; border-radius: 8px; }
+  .figure img { width: 100%; height: 100%; object-fit: cover; display:block;
+                clip-path: inset(100% 0 0 0); transform: scale(1.3); }
+</style>
+</head>
+<body>
+<div class="label">11 · <b>Clip-path Reveal</b> — 이미지가 아래에서 펼쳐지며 줌아웃</div>
+<a class="back" href="../index.html">← INDEX</a>
+
+<section class="section"><h2 class="big muted">스크롤 ↓</h2></section>
+
+<section class="section">
+  <div class="figure">
+    <img src="https://picsum.photos/seed/bluegarage/1200/750" alt="reveal">
+  </div>
+</section>
+
+<section class="section"><p class="muted">clip-path inset 100%→0% + scale 1.3→1 동시 트윈 = 고급스러운 등장.</p></section>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script>
+gsap.registerPlugin(ScrollTrigger);
+
+/* clip-path inset으로 아래에서 위로 마스크를 걷어내면서, 동시에 scale을 줄여
+   "확대된 화면이 제자리를 찾는" 듯한 reveal. Awwwards 사이트의 대표적 이미지 등장. */
+gsap.to(".figure img", {
+  clipPath: "inset(0% 0 0 0)",
+  scale: 1,
+  duration: 1.4,
+  ease: "power3.out",
+  scrollTrigger: { trigger: ".figure", start: "top 75%", toggleActions: "play none none reverse" }
+});
+</script>
+</body>
+</html>

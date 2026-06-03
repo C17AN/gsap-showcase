@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GSAP Showcase · 브랜딩 사이트 인터랙션 모음</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root { --bg:#0d0d0d; --fg:#fff; --accent:#1ea7ff; --muted:#8a8a8a; --line:rgba(255,255,255,.14); }
+  body { background:var(--bg); color:var(--fg); font-family:'Helvetica Neue',Arial,'Pretendard',sans-serif; -webkit-font-smoothing:antialiased; }
+  header { padding: 9vh 6vw 5vh; border-bottom:1px solid var(--line); }
+  header h1 { font-size: clamp(2.5rem,8vw,7rem); font-weight:900; letter-spacing:-.03em; line-height:.9; text-transform:uppercase; }
+  header h1 b { color: var(--accent); }
+  header p { margin-top:1.4rem; max-width:60ch; color:var(--muted); line-height:1.6; }
+  .tag { display:inline-block; margin-top:1.5rem; font-size:12px; letter-spacing:.15em; color:var(--accent); border:1px solid var(--accent); padding:6px 12px; border-radius:20px; }
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(290px,1fr)); gap:1px; background:var(--line); border-bottom:1px solid var(--line); }
+  a.card { background:var(--bg); padding:30px 26px; text-decoration:none; color:var(--fg); display:flex; flex-direction:column; gap:8px; transition:background .25s; min-height:160px; }
+  a.card:hover { background:#161616; }
+  a.card .num { font-size:13px; color:var(--accent); letter-spacing:.1em; }
+  a.card h3 { font-size:1.25rem; font-weight:800; }
+  a.card p { font-size:.85rem; color:var(--muted); line-height:1.5; margin-top:auto; }
+  .cat { grid-column:1/-1; background:var(--bg); padding:34px 26px 10px; font-size:12px; letter-spacing:.2em; color:var(--muted); text-transform:uppercase; }
+  footer { padding:5vh 6vw 10vh; color:var(--muted); font-size:.85rem; line-height:1.7; }
+  footer a { color:var(--accent); }
+  code { background:#1a1a1a; padding:2px 6px; border-radius:4px; font-size:.8rem; }
+</style>
+</head>
+<body>
+<header>
+  <h1>GSAP <b>SHOWCASE</b></h1>
+  <p>브랜딩·에이전시 웹사이트(BlueGarage, Awwwards 류)에서 자주 쓰이는 GSAP / ScrollTrigger 인터랙션 18종. 각 파일은 CDN만 쓰는 독립 HTML이라 더블클릭하면 바로 동작합니다.</p>
+  <span class="tag">GSAP 3.12 · ScrollTrigger · Flip · Lenis</span>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<footer>
+  실행: 아무 카드나 클릭 → 브라우저에서 바로 열림. 빌드/설치 불필요.<br>
+  의존성: 모두 cdnjs CDN 로드. 오프라인에서 보려면 인터넷 연결 필요.<br>
+  학습 포인트는 각 파일의 <code>&lt;script&gt;</code> 주석에 적어두었습니다. 자세한 설명은 <a href="README.md">README.md</a> 참고.
+</footer>
+
+<script>
+const DEMOS = [
+  ["핵심 패턴 (Core)", [
+    ["01","Pin + Scrub Hero","히어로를 고정하고 스크롤 진행도에 텍스트 트랜지션을 바인딩 (BlueGarage 히어로).","demos/01-pin-scrub-hero.html"],
+    ["02","Height Scrub Accordion","왼쪽 pin + 오른쪽 설명부 height를 scrub로 펼침 (WHAT WE BUILD 실측 재현).","demos/02-height-accordion.html"],
+    ["03","Text Reveal","라인 마스크 뒤에서 텍스트가 솟아오르는 등장.","demos/03-text-reveal.html"],
+    ["04","Horizontal Scroll","세로 스크롤을 가로 이동으로 변환하는 패널 갤러리.","demos/04-horizontal-scroll.html"],
+    ["05","Parallax Layers","레이어별 속도차로 깊이감을 주는 시차 스크롤.","demos/05-parallax.html"],
+    ["06","Pinned Stacking Cards","sticky로 카드가 쌓이며 앞 카드가 축소.","demos/06-pin-stack-cards.html"],
+    ["07","Scroll Progress","상단 진행 바 + 원형 인디케이터.","demos/07-scroll-progress.html"],
+  ]],
+  ["텍스트 연출 (Typography)", [
+    ["08","Split Text","글자 단위로 쪼개 stagger 등장 (무료 분할).","demos/08-split-text.html"],
+    ["09","Marquee","무한 흐름 + 스크롤 속도/방향에 반응.","demos/09-marquee.html"],
+    ["10","Word Fill","스크롤하며 단어가 한 개씩 또렷하게 차오름.","demos/10-text-fill.html"],
+  ]],
+  ["이미지 / 미디어 (Media)", [
+    ["11","Clip-path Reveal","clip-path + scale로 이미지가 펼쳐지며 등장.","demos/11-clip-reveal.html"],
+    ["12","Image Parallax Grid","엇갈린 갤러리 그리드 시차 스크롤.","demos/12-image-parallax-grid.html"],
+    ["13","Image Sequence","스크롤로 프레임을 재생 (Apple 식 캔버스 시퀀스).","demos/13-image-sequence.html"],
+    ["14","Header Color Invert","섹션 배경에 맞춰 헤더 색이 자동 전환.","demos/14-color-invert-nav.html"],
+  ]],
+  ["고급 레이아웃 (Advanced)", [
+    ["15","Horizontal Gallery","가로 이동 + 항목별 이미지 시차 (containerAnimation).","demos/15-horizontal-gallery.html"],
+    ["16","Flip Layout","Flip 플러그인으로 레이아웃 전환을 자동 보간.","demos/16-flip-layout.html"],
+    ["17","Lenis Smooth Scroll","관성 스크롤 + ScrollTrigger 동기화 (ScrollSmoother 무료 대안).","demos/17-smooth-scroll-lenis.html"],
+    ["18","ScrollTrigger.batch","대형 그리드를 batch로 묶어 stagger 등장.","demos/18-batch-reveal.html"],
+  ]],
+];
+const grid = document.getElementById("grid");
+DEMOS.forEach(([cat, items]) => {
+  grid.insertAdjacentHTML("beforeend", `<div class="cat">${cat}</div>`);
+  items.forEach(([num,title,desc,href]) => {
+    grid.insertAdjacentHTML("beforeend",
+      `<a class="card" href="${href}"><span class="num">${num}</span><h3>${title}</h3><p>${desc}</p></a>`);
+  });
+});
+</script>
+</body>
+</html>

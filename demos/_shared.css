@@ -1,0 +1,50 @@
+/* gsap-showcase 공통 스타일 — 브랜딩 사이트 룩앤필 (BlueGarage/Awwwards 풍) */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0d0d0d;
+  --fg: #ffffff;
+  --accent: #1ea7ff;     /* BlueGarage 블루 */
+  --muted: #8a8a8a;
+  --line: rgba(255,255,255,.18);
+}
+html { scroll-behavior: auto; }   /* GSAP가 스크롤 제어하므로 native smooth 끔 */
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Helvetica Neue', Arial, 'Pretendard', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+h1, h2, h3 { font-weight: 800; letter-spacing: -.02em; line-height: .95; }
+.huge { font-size: clamp(3rem, 11vw, 11rem); text-transform: uppercase; }
+.big  { font-size: clamp(2rem, 6vw, 5rem); text-transform: uppercase; }
+.section {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6vw;
+  position: relative;
+}
+.label {
+  position: fixed; top: 20px; left: 20px; z-index: 999;
+  font-size: 12px; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--muted); background: rgba(0,0,0,.5); padding: 8px 12px;
+  border: 1px solid var(--line); border-radius: 4px; backdrop-filter: blur(6px);
+}
+.label b { color: var(--accent); }
+.hint {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  z-index: 999; font-size: 12px; letter-spacing: .1em; color: var(--muted);
+  animation: bob 1.6s ease-in-out infinite;
+}
+@keyframes bob { 0%,100%{ transform: translateX(-50%) translateY(0);} 50%{ transform: translateX(-50%) translateY(6px);} }
+.back {
+  position: fixed; top: 20px; right: 20px; z-index: 999;
+  color: var(--fg); text-decoration: none; font-size: 12px; letter-spacing: .1em;
+  border: 1px solid var(--line); padding: 8px 14px; border-radius: 4px;
+  background: rgba(0,0,0,.5); backdrop-filter: blur(6px);
+}
+.back:hover { background: var(--accent); border-color: var(--accent); }
+.muted { color: var(--muted); }
+.accent { color: var(--accent); }
